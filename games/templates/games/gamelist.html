@@ -1,58 +1,61 @@
 {% extends 'base.html' %}
 {% block head %}
 <style>
-.game-actions {
-    display: block;  /* 확인 */
+.container{
+    margin: 50px;
+    color: #65366c;
 }
 
+.game-item{
+    display: flex;
+    justify-content: space-between;
+    margin: 30px 40px;
+}
+.item-container a{
+    text-decoration: none;
+    background-color: #65366c;
+    color: salmon;
+    border: 1px solid salmon;
+    border-radius: 10px;
+    padding: 15px;
+}
+.header-title{
+    font-size: 2rem;
+    margin: 20px 20px 40px 0;
+    color: #65366c;
+    font-weight: bold;
+}
 </style>
 {% endblock %}
 
 
 {% block content %}
-<div class="header-title">History List</div>
-<div class="main-container">
-    <div class="main-title">현재 플레이어 : {{ user.first_name }}</div>
-    <hr>
-    <div class="item-container">
-        {% for game in game_info %}
-            <div class="game-item">
-                <div class="game-info">
-                    <span>No.{{ forloop.counter }}</span>
-                    <span>{{ user.name }} VS. {{ game.opponent }}</span>
-                    <span>상태: {{ game.status }}</span>
+<div class="container">
+    <div class="header-title">History List</div>
+    <div class="main-container">
+        <div class="main-title">현재 플레이어 : {{ user.first_name }}</div>
+        <br>
+        <hr>
+        <div class="item-container">
+            {% for game in game_info %}
+                <div class="game-item">
+                    <div class="game-info">
+                        <span>No.{{ forloop.counter }}</span>
+                        <span>{{ user.first_name }} VS. {{ game.opponent }}</span>
+                    </div>
+                    <div class="game-actions">
+                        <span>{{ game.status }}</span>
+                        <a href="{{ game.link }}" class="game-link">{{ game.action }}</a>
+                    </div>
+                    <div class="game-detail">
+                        <a href="#">게임정보</a> <!-- 수정 필요 !!-->
+                    </div>
                 </div>
-                <div class="game-actions">
-                    {% if game.status == 'ongoing' %}
-                        {% if game.opponent == user.name %}
-                            <!-- 내가 방어자인 경우 : 수정 필요 -->
-                            <a href="{{ game.link }}" class="game-link">반격하기</a>
-                        {% else %}
-                            <!-- 내가 공격자인 경우 : 수정 필요 -->
-                            <a href="{{ game.link }}" class="game-link">게임 취소하기</a>
-                        {% endif %}
-                    {% elif game.status == 'end' %}
-                        <!-- 종료된 경우 -->
-                        {% if '승리' in game.status %}
-                            <span>게임 결과: 승리</span>
-                        {% elif '패배' in game.status %}
-                            <span>게임 결과: 패배</span>
-                        {% else %}
-                            <span>게임 결과: 무승부</span>
-                        {% endif %}
-                        <a href="{{ game.link }}" class="game-link">게임 결과</a>
-                    {% else %}
-                        <div>게임 상태 오류: 상태 값이 잘못되었습니다.</div>
-                    {% endif %}
-                
-                </div>                
-                <div class="game-detail">
-                    <a href="#">게임 상세보기</a> <!-- 수정 필요 !!-->
-                </div>
-            </div>
-        {% empty %}
-            <p>아직 진행된 게임이 없습니다.</p>
-        {% endfor %}
+            {% empty %}
+                <p>아직 진행된 게임이 없습니다.</p>
+            {% endfor %}
+        </div>
     </div>
 </div>
+
 {% endblock %}

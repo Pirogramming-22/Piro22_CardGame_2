@@ -3,8 +3,8 @@ from accounts.models import User # 수정 필요
 
 class Game(models.Model):
     STATUS_CHOICES = [
-        ('ongoing', '진행중'),
-        ('end', '종료됨'),
+        ('ongoing', '진행중 ...'),
+        ('end', '결과 :'),
     ]
 
     WINNER_CHOICES = [
