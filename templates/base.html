@@ -15,10 +15,10 @@
             {% if user.is_authenticated %}
                 <a href="#">게임하기</a>
                 <a href="#">랭킹보기</a>
-                <a href="/main/">로그아웃</a>
+                <a href="{% url 'accounts:main' %}">로그아웃</a>
             {% else %}
-                <a href="{% url 'accounts:kakao-login' %}">로그인</a>
-                <a href="{% url 'accounts:kakao-login' %}">회원가입</a>
+                <a href="{% url 'accounts:social_login' %}">로그인</a>
+                <a href="{% url 'accounts:social_login' %}">회원가입</a>
             {% endif %}
         </nav>
     </header>
