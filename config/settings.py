@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-import os
+import json
 from pathlib import Path
-from dotenv import load_dotenv
+from django.core.exceptions import ImproperlyConfigured
 
 
 
@@ -20,27 +20,23 @@ from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+with open(BASE_DIR / 'secrets.json') as f:
+    secrets = json.loads(f.read())
 
-# .env 파일 경로 명시적으로 설정
-dotenv_path = BASE_DIR / ".env"
-load_dotenv(dotenv_path)
+def get_secret(setting, secrets=secrets):
+    try:
+        return secrets[setting]
+    except KeyError:
+        error_msg = f'Set the {setting} environment variable'
+        raise ImproperlyConfigured(error_msg)
 
-# 환경 변수에서 API 키 가져오기
-KAKAO_API_KEY = os.getenv("KAKAO_API_KEY")
-
-# 디버깅용 확인 (배포 시에는 제거해야 함)
-if not KAKAO_API_KEY:
-    raise ValueError("KAKAO_API_KEY is not set in .env")
-else:
-    print(KAKAO_API_KEY)
-
+SECRET_KEY = get_secret("SECRET_KEY")
+KAKAO_API_KEY = get_secret("KAKAO_API_KEY")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-cb=f$n(%d5b36_$1r%)$u1h!tuuljq!tu_*qxc8==ok@8$osa1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -143,6 +139,12 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
+]
+
+AUTH_USER_MODEL = 'accounts.User'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 # Default primary key field type

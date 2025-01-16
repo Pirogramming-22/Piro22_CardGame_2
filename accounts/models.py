@@ -1,44 +1,30 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
-# Create your models here.
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Users must have an email address')
+        user = self.model(
+            email=self.normalize_email(email),
+            **extra_fields
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(email, password, **extra_fields)
 
 class User(AbstractUser):
-
+    username = None
+    email = models.EmailField(unique=True)
+    social_id = models.CharField(max_length=100, null=True, blank=True)
+    profile_image = models.ImageField(upload_to='profile_images', null=True, blank=True)
     
-    """ Custom User model """
-
-    LOGIN_EMAIL = "email"
-    LOGIN_KAKAO = "kakao"
-
-    LOGIN_CHOICES = (
-        (LOGIN_EMAIL, "Email"),
-        (LOGIN_KAKAO, "Kakao"),
-    )
-
-    login_method = models.CharField(
-        max_length=6, choices=LOGIN_CHOICES, default=LOGIN_KAKAO
-    )
-
-    def is_social_login(self):
-        return self.login_method in [self.LOGIN_KAKAO]
-
-class KakaoException(Exception):
-    pass
-
-
-class SocialLoginException(Exception):
-    pass
-
-
-class UserManager(models.Manager):
-    def get_or_none(self, **kwargs):
-        try:
-            return self.get(**kwargs)
-        except ObjectDoesNotExist:
-            return None
-        
-
-class User(models.Model):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+    
     objects = UserManager()
