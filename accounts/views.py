@@ -85,3 +85,74 @@ def kakao_login_callback(request):
 
 def main(request):
     return render(request, 'accounts/main.html', {'user': request.user})
+
+
+def naver_login(request):
+    client_id = settings.NAVER_CLIENT_ID
+    redirect_uri = "http://127.0.0.1:8000/accounts/login/naver/callback"
+    state = "RANDOM_STATE"  
+    
+    return redirect(
+        f"https://nid.naver.com/oauth2.0/authorize?response_type=code"
+        f"&client_id={client_id}"
+        f"&redirect_uri={redirect_uri}"
+        f"&state={state}"
+        f"&scope=name email profile_image gender"
+    )
+
+def naver_login_callback(request):
+    client_id = settings.NAVER_CLIENT_ID
+    client_secret = settings.NAVER_CLIENT_SECRET
+    code = request.GET.get("code")
+    state = request.GET.get("state")
+    
+    token_request = requests.post(
+        "https://nid.naver.com/oauth2.0/token",
+        data={
+            "grant_type": "authorization_code",
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "code": code,
+            "state": state,
+        },
+    )
+    token_json = token_request.json()
+    
+    if "error" in token_json:
+        return redirect("/")
+        
+    access_token = token_json.get("access_token")
+    
+    profile_request = requests.get(
+        "https://openapi.naver.com/v1/nid/me",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+    profile_json = profile_request.json()
+    
+    if profile_json.get("resultcode") != "00":
+        return redirect("/")
+        
+    response = profile_json.get("response")
+    email = response.get("email")
+    name = response.get("name")
+    profile_image = response.get("profile_image")
+    gender = response.get("gender")
+    
+    if not email or not name:
+        return redirect("/")
+        
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        user = User.objects.create_user(
+            email=email,
+            social_id=f"naver_{response.get('id')}",
+            first_name=name,
+        )
+        if profile_image:
+            user.profile_image = profile_image
+        user.save()
+            
+    login(request, user)
+    
+    return redirect('accounts:mainpage') if request.user.is_authenticated else redirect("/")

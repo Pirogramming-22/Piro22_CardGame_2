@@ -9,14 +9,24 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 import json
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 
+# 네이버 부분 관련 (임시)
+with open('secrets.json') as f:
+    secrets = json.loads(f.read())
 
+def get_secret(setting, secrets=secrets):
+    try:
+        return secrets[setting]
+    except KeyError:
+        error_msg = f"Set the {setting} environment variable"
+        raise ImproperlyConfigured(error_msg)
 
-
+NAVER_CLIENT_ID = get_secret("NAVER_CLIENT_ID")
+NAVER_CLIENT_SECRET = get_secret("NAVER_CLIENT_SECRET")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
