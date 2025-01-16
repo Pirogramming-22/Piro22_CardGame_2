@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirogrammer Card Game</title>
+    {% load static %}
+    <style>
+      header {
+          background-color: #563d7c;
+          padding: 1rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: white;
+      }
+
+      .header-logo {
+          font-size: 1.5rem;
+          font-weight: bold;
+          text-decoration: none;
+          color: white;
+      }
+
+      nav a {
+          color: white;
+          text-decoration: none;
+          margin-left: 2rem;
+      }
+
+      main {
+          min-height: calc(100vh - 120px);
+          padding: 2rem;
+      }
+
+      footer {
+          background-color: #563d7c;
+          color: white;
+          text-align: center;
+          padding: 1rem;
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+      }
+    </style>
+
+</head>
+<body>
+    <header>
+        <a href="/" class="header-logo">Pirogrammer Card Game</a>
+        <nav>
+            <a href="#">게임하기</a>
+            <a href="#">랭킹보기</a>
+            <a href="#">로그아웃</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>피로그래밍 카드 게임 세션 2조</p>
+    </footer>
+
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
