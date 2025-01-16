@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'accounts',
     'games',
 ]
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # 세션을 DB에 저장
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

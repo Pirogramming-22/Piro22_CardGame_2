@@ -10,4 +10,5 @@ urlpatterns = [
     path('login/kakao/', views.kakao_login, name='kakao-login'),
     path('login/kakao/callback/', views.kakao_login_callback, name='kakao-callback'),
     # path('social_login', views.social_login, name="social_login"),
+    path('mainpage/', views.main, name='mainpage'),
 ]
