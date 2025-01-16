@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),  # 로그인/회원가입을 메인 페이지로 (현재 임시)
+    path("users", include("accounts.urls", namespace="accounts")), #소셜 로그인
 ]

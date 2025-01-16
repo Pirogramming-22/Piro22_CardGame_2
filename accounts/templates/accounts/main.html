@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="home-container">
+    <h1 class="home-title">Piro Game</h1>
+    
+    {% if user.is_authenticated %}
+        <!-- 로그인 한 사용자 -->
+        <p>{{ user.username }} 님이 로그인 중</p>
+        <button class="start-button">start</button>
+        <button class="list-button">list</button>
+    {% else %}
+        <!-- 로그인하지 않은 사용자 -->
+        <button class="start-button">start</button>
+        <a href="{% url 'accounts:login' %}" class="login-button">로그인</a>
+        <a href="{% url 'accounts:social_login' %}" class="signup-button"> 회원가입 </a>
+    {% endif %}
+</section>
+{% endblock %}

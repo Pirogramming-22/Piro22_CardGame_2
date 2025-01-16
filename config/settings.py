@@ -10,10 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# .env 파일 경로 명시적으로 설정
+dotenv_path = BASE_DIR / ".env"
+load_dotenv(dotenv_path)
+
+# 환경 변수에서 API 키 가져오기
+KAKAO_API_KEY = os.getenv("KAKAO_API_KEY")
+
+# 디버깅용 확인 (배포 시에는 제거해야 함)
+if not KAKAO_API_KEY:
+    raise ValueError("KAKAO_API_KEY is not set in .env")
+else:
+    print(KAKAO_API_KEY)
+
 
 
 # Quick-start development settings - unsuitable for production
