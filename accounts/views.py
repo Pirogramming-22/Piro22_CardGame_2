@@ -3,11 +3,13 @@ from django.contrib.auth import login
 from django.conf import settings
 from .models import User
 import requests
+from django.contrib.auth import logout
 
 def social_login(request):
     return render(request, 'accounts/social_login.html')
 
 def kakao_login(request):
+    client_id = settings.KAKAO_API_KEY  # settings에서 바로 가져오기
     client_id = settings.KAKAO_API_KEY  # settings에서 바로 가져오기
     redirect_uri = "http://127.0.0.1:8000/accounts/login/kakao/callback"
     return redirect(
@@ -17,8 +19,10 @@ def kakao_login(request):
 def kakao_login_callback(request):
     code = request.GET.get("code")
     client_id = settings.KAKAO_API_KEY  # settings에서 바로 가져오기
+    client_id = settings.KAKAO_API_KEY  # settings에서 바로 가져오기
     redirect_uri = "http://127.0.0.1:8000/accounts/login/kakao/callback"
 
+    # 카카오에서 토큰 요청
     # 카카오에서 토큰 요청
     token_request = requests.post(
         "https://kauth.kakao.com/oauth/token",
@@ -32,6 +36,8 @@ def kakao_login_callback(request):
     token_json = token_request.json()
 
     # 에러 처리
+
+    # 에러 처리
     error = token_json.get("error", None)
     if error is not None:
         print(f"Error during token request: {error}")
@@ -40,6 +46,7 @@ def kakao_login_callback(request):
     access_token = token_json.get("access_token")
 
     # 프로필 정보 요청
+    # 프로필 정보 요청
     profile_request = requests.get(
         "https://kapi.kakao.com/v2/user/me",
         headers={"Authorization": f"Bearer {access_token}"},
@@ -47,10 +54,17 @@ def kakao_login_callback(request):
     profile_json = profile_request.json()
 
     # 카카오 계정 정보 확인
+
+    # 카카오 계정 정보 확인
     kakao_account = profile_json.get("kakao_account")
     email = kakao_account.get("email", None)
 
+
     if email is None:
+        print("No email found, redirecting to home.")
+        return redirect("/")  # 이메일이 없으면 메인 페이지로 리디렉션
+
+    # 프로필 정보
         print("No email found, redirecting to home.")
         return redirect("/")  # 이메일이 없으면 메인 페이지로 리디렉션
 
@@ -58,6 +72,8 @@ def kakao_login_callback(request):
     properties = profile_json.get("properties")
     nickname = properties.get("nickname")
     profile_image = properties.get("profile_image")
+
+    # 기존 사용자 확인 및 로그인 처리
 
     # 기존 사용자 확인 및 로그인 처리
     try:
@@ -153,6 +169,28 @@ def naver_login_callback(request):
             user.profile_image = profile_image
         user.save()
             
+        user.save()
+            
     login(request, user)
     
-    return redirect('accounts:mainpage') if request.user.is_authenticated else redirect("/")
+    return redirect('accounts:main') if request.user.is_authenticated else redirect("/")
+
+# def main(request):
+#     return render(request, 'accounts/main.html')
+
+
+def social_login(request):
+    return render(request, 'accounts/social_login.html')
+
+
+def start(request):
+    if not request.user.is_authenticated:
+        # 로그인하지 않은 사용자라면 social_login 페이지로 리디렉션
+        return redirect('accounts:social_login')
+    
+    # 로그인된 사용자라면 start 페이지를 렌더링
+    return render(request, 'accounts/start.html', {'user': request.user})
+
+def user_logout(request):
+    logout(request)  # 세션 종료
+    return redirect('accounts:main')  # 로그아웃 후 리디렉션할 페이지 (예: 메인 페이지)

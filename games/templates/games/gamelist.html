@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block head %}
+<style>
+.game-actions {
+    display: block;  /* 확인 */
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="header-title">History List</div>
+<div class="main-container">
+    <div class="main-title">현재 플레이어 : {{ user.first_name }}</div>
+    <hr>
+    <div class="item-container">
+        {% for game in game_info %}
+            <div class="game-item">
+                <div class="game-info">
+                    <span>No.{{ forloop.counter }}</span>
+                    <span>{{ user.name }} VS. {{ game.opponent }}</span>
+                    <span>상태: {{ game.status }}</span>
+                </div>
+                <div class="game-actions">
+                    {% if game.status == 'ongoing' %}
+                        {% if game.opponent == user.name %}
+                            <!-- 내가 방어자인 경우 : 수정 필요 -->
+                            <a href="{{ game.link }}" class="game-link">반격하기</a>
+                        {% else %}
+                            <!-- 내가 공격자인 경우 : 수정 필요 -->
+                            <a href="{{ game.link }}" class="game-link">게임 취소하기</a>
+                        {% endif %}
+                    {% elif game.status == 'end' %}
+                        <!-- 종료된 경우 -->
+                        {% if '승리' in game.status %}
+                            <span>게임 결과: 승리</span>
+                        {% elif '패배' in game.status %}
+                            <span>게임 결과: 패배</span>
+                        {% else %}
+                            <span>게임 결과: 무승부</span>
+                        {% endif %}
+                        <a href="{{ game.link }}" class="game-link">게임 결과</a>
+                    {% else %}
+                        <div>게임 상태 오류: 상태 값이 잘못되었습니다.</div>
+                    {% endif %}
+                
+                </div>                
+                <div class="game-detail">
+                    <a href="#">게임 상세보기</a> <!-- 수정 필요 !!-->
+                </div>
+            </div>
+        {% empty %}
+            <p>아직 진행된 게임이 없습니다.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
