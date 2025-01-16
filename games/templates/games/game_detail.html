@@ -1,6 +1,91 @@
 {% extends 'base.html' %}
 {% block content %}
-    
+<style>
+/* 게임 디테일 컨테이너 */
+.game-detail-container {
+    background-color: #F8E1D4;
+    border-radius: 10px;
+    padding: 30px;
+    width: 500px;
+    margin: 50px auto;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* 게임 헤더 */
+.game-header {
+    background-color: #5C2A9D;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 20px;
+}
+
+/* 게임 상태 설명 (진행 중...) */
+.game-subtitle {
+    font-size: 16px;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* 게임 정보 섹션 */
+.game-info {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.game-info p {
+    margin: 8px 0;
+}
+
+/* 버튼 스타일 */
+.action-button,
+.history-button {
+    background-color: #F6B93B;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    margin: 10px 0;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+}
+
+.action-button:hover,
+.history-button:hover {
+    background-color: #F39C12;
+}
+
+/* 게임 종료 후 게임 결과 및 점수 */
+.game-result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.game-result span {
+    font-size: 20px;
+}
+
+
+/* 전적 목록 버튼 */
+.history-button {
+    background-color: #5C2A9D;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.history-button:hover {
+    background-color: #9B5CC0;
+}
+</style>
+
     <div class="game-detail-container">
         <div class="game-header">
             <h3>{{ game.startingPlayer.username }} VS {{ game.defendingPlayer.username }}</h3>
