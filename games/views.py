@@ -125,3 +125,72 @@ def update_scores(self):
     # 무승부일 경우 점수 변동 없음
     self.startingPlayer.save()
     self.defendingPlayer.save()
+
+
+#게임 디테일 페이지
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Game
+from accounts.models import User
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def game_detail(request, game_id):
+    user = request.user
+    game = get_object_or_404(Game, id=game_id)
+
+
+    if game.status == 'ongoing':
+        if game.startingPlayer == user:
+            # '다른 유저에게 싸움을 건(아직 반격x)' 상태
+            context = {
+                'game': game,
+                'user': user,
+                'status': '진행중...',
+                'card_number': game.startingPlayerNum,
+            }
+        elif game.defendingPlayer == user:
+            # '다른 유저가 싸움을 걸어온' 상태
+            context = {
+                'game': game,
+                'user': user,
+            }
+        else:
+            context = {'error': '게임 상태를 처리할 수 없습니다.'}
+
+    elif game.status == 'end':
+        # '이미 종료된 게임' 상태
+        result = {
+            '승리': '✨승리!✨',
+            '패배': '🥲패배🥲',
+            '무승부': '💥무승부💥'
+        }
+
+
+        if game.winner == 'starting':
+            if game.startingPlayer == user:
+                game_result = result['승리']
+                score = f'🎯 {game.startingPlayerNum} 점 획득'
+            else:
+                game_result = result['패배']
+                score = f'💔 {game.defendingPlayerNum} 점 차감'
+
+        elif game.winner == 'defending':
+            if game.defendingPlayer == user:
+                game_result = result['승리']
+                score = f'🎯 {game.defendingPlayerNum} 점 획득'
+            else:
+                game_result = result['패배']
+                score = f'💔 {game.startingPlayerNum} 점 차감'
+        elif game.winner == 'draw':
+            game_result = result['무승부']
+            score = '😐 점수 변동 없음'
+
+        game_result = result.get(game.winner, 'Unknown result')
+        context = {
+            'game': game,
+            'user': user,
+            'game_result': game_result,
+            'score': score 
+        }
+
+    return render(request, 'games/game_detail.html', context)

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="game-detail-container">
+        <div class="game-header">
+            <h3>{{ game.startingPlayer.username }} VS {{ game.defendingPlayer.username }}</h3>
+        </div>
+
+        {% if game.status == 'ongoing' and game.startingPlayer == user %}
+            <!-- 다른 유저에게 싸움을 건 상태 -->
+            <p class="game-subtitle">진행 중...</p>
+            <div class="game-info">
+                <p><strong>나:</strong> {{ game.startingPlayerNum }}</p>
+            </div>
+            <div class="game-actions">
+                <form method="POST" action="{% url 'games:cancel_game' game.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="action-button">게임 취소</button>
+                </form>
+                <a href="{% url 'games:history_list' %}" class="history-button">전적 목록</a>
+            </div>
+        
+        {% elif game.status == 'ongoing' and game.defendingPlayer == user %}
+            <!-- 다른 유저가 싸움을 걸어온 상태 -->
+            <p class="game-subtitle">다른 유저가 싸움을 걸어온 상태입니다.</p>
+            <div class="game-info">
+                <p><strong>참여 유저:</strong> {{ game.startingPlayer.username }}</p>
+            </div>
+            <div class="game-actions">
+                <form method="POST" action="{% url 'games:counter_attack' game.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="action-button">대응하기</button>
+                </form>
+                <a href="{% url 'games:history_list' %}" class="history-button">전적 목록</a>
+            </div>
+        
+        {% elif game.status == 'end' %}
+            <!-- 이미 종료된 게임 -->
+            <p class="game-subtitle">게임 종료됨</p>
+            <div class="game-info">
+                <p><strong>참여 유저:</strong> {{ game.startingPlayer.username }} VS {{ game.defendingPlayer.username }}</p>
+                {% if game.winner == 'starting' %}
+                    <p>결과: 승리</p>
+                {% elif game.winner == 'defending' %}
+                    <p>결과: 패배</p>
+                {% else %}
+                    <p>결과: 무승부</p>
+                {% endif %}
+                <p><strong>점수:</strong> 
+                    {% if game.winner == 'starting' %}
+                        {{ game.startingPlayerNum }}
+                    {% elif game.winner == 'defending' %}
+                        -{{ game.defendingPlayerNum }}
+                    {% else %}
+                        0
+                    {% endif %}
+                </p>
+            </div>
+            <a href="{% url 'games:history_list' %}" class="history-button">전적 목록</a>
+        {% endif %}
+    </div>
+{% endblock %}
