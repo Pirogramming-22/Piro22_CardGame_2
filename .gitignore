@@ -4,6 +4,8 @@
 # Ignore .env file
 .env
 
+api_key = be380192c9a0c102991d9c22f6aa17f8
+
 ### Django ###
 *.log
 *.pot
