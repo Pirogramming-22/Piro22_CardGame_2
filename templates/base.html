@@ -12,9 +12,14 @@
     <header>
         <a href="/" class="header-logo">Pirogrammer Card Game</a>
         <nav>
-            <a href="#">게임하기</a>
-            <a href="#">랭킹보기</a>
-            <a href="#">로그아웃</a>
+            {% if user.is_authenticated %}
+                <a href="#">게임하기</a>
+                <a href="#">랭킹보기</a>
+                <a href="/main/">로그아웃</a>
+            {% else %}
+                <a href="{% url 'accounts:kakao-login' %}">로그인</a>
+                <a href="{% url 'accounts:kakao-login' %}">회원가입</a>
+            {% endif %}
         </nav>
     </header>
 

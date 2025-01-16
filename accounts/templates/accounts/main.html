@@ -1,19 +1,18 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<section class="home-container">
-    <h1 class="home-title">Piro Game</h1>
-    
+<div class="main-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: calc(100vh - 120px); text-align: center; background: linear-gradient(135deg, #f8e1d4, #f4cbc0);">
+    <h1 class="game-title" style="font-size: 3rem; font-weight: bold; color: #65366c; margin-bottom: 2rem;">Piro Game</h1>
+
     {% if user.is_authenticated %}
-        <!-- 로그인 한 사용자 -->
-        <p>{{ user.username }} 님이 로그인 중</p>
-        <button class="start-button">start</button>
-        <button class="list-button">list</button>
+    <p class="welcome-message" style="font-size: 1.2rem; color: #65366c; margin-bottom: 1.5rem;">{{ user.username }}님이 로그인 중</p>
+    <div class="button-group" style="display: flex; gap: 1rem;">
+        <button class="main-button" style="font-size: 1.5rem; padding: 0.5rem 2rem; background-color: #65366c; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;" onclick="location.href='/start'">start</button>
+        <button class="main-button" style="font-size: 1.5rem; padding: 0.5rem 2rem; background-color: #65366c; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;" onclick="location.href='/list'">list</button>
+    </div>
     {% else %}
-        <!-- 로그인하지 않은 사용자 -->
-        <button class="start-button">start</button>
-        <a href="{% url 'accounts:login' %}" class="login-button">로그인</a>
-        <a href="{% url 'accounts:social_login' %}" class="signup-button"> 회원가입 </a>
+    <button class="main-button" style="font-size: 1.5rem; padding: 0.5rem 2rem; background-color: #65366c; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;" onclick="location.href='/start'">start</button>
     {% endif %}
-</section>
+</div>
 {% endblock %}

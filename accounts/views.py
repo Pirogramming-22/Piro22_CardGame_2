@@ -5,8 +5,7 @@ from .models import User
 import requests
 import os
 
-def social_login(request):
-    return render(request, 'accounts/social_login.html')
+
 
 def kakao_login(request):
     client_id = settings.KAKAO_API_KEY
@@ -67,3 +66,6 @@ def kakao_login_callback(request):
     
     login(request, user)
     return redirect('accounts:main') 
+
+def main(request):
+    return render(request, 'accounts/main.html')
