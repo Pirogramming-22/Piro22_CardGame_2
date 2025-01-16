@@ -3,8 +3,7 @@ from django.contrib.auth import login
 from django.conf import settings
 from .models import User
 import requests
-
-
+from django.contrib.auth import logout
 
 def kakao_login(request):
     client_id = settings.KAKAO_API_KEY  # settings에서 바로 가져오기
@@ -162,3 +161,16 @@ def naver_login_callback(request):
 
 def social_login(request):
     return render(request, 'accounts/social_login.html')
+
+
+def start(request):
+    if not request.user.is_authenticated:
+        # 로그인하지 않은 사용자라면 social_login 페이지로 리디렉션
+        return redirect('accounts:social_login')
+    
+    # 로그인된 사용자라면 start 페이지를 렌더링
+    return render(request, 'accounts/start.html', {'user': request.user})
+
+def user_logout(request):
+    logout(request)  # 세션 종료
+    return redirect('accounts:main')  # 로그아웃 후 리디렉션할 페이지 (예: 메인 페이지)
