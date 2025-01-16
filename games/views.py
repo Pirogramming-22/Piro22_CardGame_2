@@ -104,7 +104,7 @@ def history_list(request):
                 'opponent': game.defendingPlayer.first_name if game.startingPlayer == user else game.startingPlayer.first_name,
                 'status': f'결과 : ({result})',
                 'action': '결과 보기',
-                'link': f"/gamedetail/{game.id}/"  # 게임 상세 보기 링크
+                'link': f"/game_detail/{game.id}/"  # 게임 상세 보기 링크
             })
 
     print(f"게임 정보: {game_info}")  # 디버깅용 로그
@@ -193,3 +193,53 @@ def game_detail(request, game_id):
         }
 
     return render(request, 'games/game_detail.html', context)
+
+
+@login_required
+def cancel_game(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+
+    if game.status == 'ongoing' and game.startingPlayer == request.user:
+        game.status = 'cancelled'  # 게임 상태를 취소로 변경
+        game.save()
+
+    return redirect('games:history_list')
+
+
+@login_required
+def counter_attack(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+
+    if game.status == 'ongoing' and game.defendingPlayer == request.user:
+        # 카드 숫자 비교
+        if game.defendingPlayerNum > game.startingPlayerNum:
+            # 방어자가 승리
+            game.winner = 'defending'
+            game_result = '✨승리!✨'
+            score = f'🎯 {game.defendingPlayerNum} 점 획득'
+            # 점수 업데이트: 방어자는 점수 획득, 공격자는 점수 차감
+            game.defendingPlayer.score += game.defendingPlayerNum
+            game.startingPlayer.score -= game.startingPlayerNum
+        else:
+            # 공격자가 승리
+            game.winner = 'starting'
+            game_result = '🥲패배🥲'
+            score = f'💔 {game.startingPlayerNum} 점 차감'
+            # 점수 업데이트: 공격자는 점수 획득, 방어자는 점수 차감
+            game.startingPlayer.score += game.startingPlayerNum
+            game.defendingPlayer.score -= game.defendingPlayerNum
+
+        # 게임 상태를 종료로 설정
+        game.status = 'end'
+        game.save()
+        game.startingPlayer.save()
+        game.defendingPlayer.save()
+
+        context = {
+            'game': game,
+            'user': request.user,
+            'game_result': game_result,
+            'score': score
+        }
+        return render(request, 'games/game_detail.html', context)
+    return redirect('games:history_list')
