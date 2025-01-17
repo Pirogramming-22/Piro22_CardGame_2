@@ -245,3 +245,15 @@ def counter_attack(request, game_id):
         }
         return render(request, 'games/game_detail.html', context)
     return redirect('games:history_list')
+
+@login_required
+def rankings(request):
+    # 상위 3명의 유저 가져오기 (점수 순 정렬)
+    top_users = User.objects.order_by('-score')[:3]
+
+    # 유저가 3명보다 적을 경우 예외 처리
+    while len(top_users) < 3:
+        top_users = list(top_users)
+        top_users.append(None)
+
+    return render(request, 'games/rankings.html', {'top_users': top_users})
