@@ -9,6 +9,7 @@
 | [@eunkyoung529](https://github.com/eunkyoung529) | [@axoesnxm](https://github.com/axoesnxm) | [@parkgunwook0617](https://github.com/parkgunwook0617) | [@Imggaggu](https://github.com/Imggaggu) | [@seung-in-Yoo](https://github.com/seung-in-Yoo) |
 
 #### 팀 노션 페이지: [Piro_CardGame #2](https://www.notion.so/Piro_CardGame-2-17d3f49079d880c08b0de477ab4cf89d)
+<br>
 
 ## 🌟파트분담
 - 김은경 - 로그인, 메인 페이지 템플릿 작성 및 관련 css 
@@ -17,6 +18,7 @@
 - 유승인 - 반격하기 페이지, 로그인, 파트 템플릿 작성 및 관련 css
 - 박건욱 - 랭킹보기 페이지, base 구현, 파트 템플릿 작성 및 관련 css <br><br>
 => 파트를 나누긴 했지만 사실상 안되는 부분이나 수정해야하는 부분은 지속적인 소통을 통해 파트를 가리지 않고 적극적으로 문제 해결
+<br>
 
 ## ⭐협업방식
 1. 커밋 메시지 컨벤션 
@@ -37,6 +39,7 @@
 - GitHub
 - Discord
 - Kakaotalk
+<br>
 
 ## 🛠️프로젝트 설명
 1. **로그인 페이지**:
@@ -67,3 +70,15 @@
 ## 💬추가사항
 1. 만약 발표가 끝나고 다시 과제 채점을 하신다면 현재 배포된 상태가 아니기 때문에 네이버 소셜 로그인은 테스터 ID 등록이 필요합니다. 네이버 소셜 로그인이 필요하시다면 "22기-유승인" 으로 연락주시면 바로 아이디 등록해드리겠습니다. (카카오는 등록 안해도 로그인 가능)
 2. 현재 보안에 민감한 api key들은 secrets.json 파일에 따로 작성하여 .gitignore로 들어있습니다. 서버 실행이 제대로 동작하려면 디렉토리 최상단에 secrets.json 파일 생성과 함께 KAKAO_API_KEY, Django SECRET_KEY, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET이 필요하기에 이 역시도 "22기-유승인" 으로 연락주시면 secrets.json에 들어있는 키 값들을 알려드리겠습니다.
+<br>
+
+## 📝서버 시작 방법
+1. 해당 레포지토리를 git clone한다 (git clone https://github.com/Pirogramming-22/Piro22_CardGame_2.git)
+2. change directory를 통해 Piro22_CardGame_2로 이동한다 (cd Piro22_CardGame_2)
+3. 디렉토리 최상단에 secrets.json 파일을 생성하고 KAKAO_API_KEY, Django SECRET_KEY, NAVER_CLIENT_ID, NAVER_CLIENT_SECRET를 넣는다
+4. 가상 환경을 설치해준다 (python -m venv venv)
+5. 가상 환경 활성화를 진행해준다 (source venv/Scripts/activate)
+6. 장고를 설치한다 (pip install django)
+7. 마이그레이션을 적용해준다 (python manage.py migrate) => 혹시 안된다면 마이그레이션 생성까지 진행 (python manage.py makemigrations)
+8. requests, Pillow 라이브러리를 설치한다 (pip install requests, python -m pip install Pillow)
+9. 가상환경 서버를 실행시킨다 (python manage.py runserver)
