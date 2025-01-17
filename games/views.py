@@ -184,7 +184,7 @@ def game_detail(request, game_id):
             game_result = result['무승부']
             score = '😐 점수 변동 없음'
 
-        game_result = result.get(game.winner, 'Unknown result')
+        
         context = {
             'game': game,
             'user': user,

@@ -119,8 +119,8 @@
             <!-- 이미 종료된 게임 -->
             <div class="game-info">
                 <p>숫자가 작은 사람이 이깁니다.</p>
-                <p><strong>{{ game.startingPlayer.username }}:</strong> {{ game.startingPlayerNum }}</p>  <!-- user1 카드 -->
-                <p><strong>{{ game.defendingPlayer.username }}:</strong> {{ game.defendingPlayerNum }}</p>  <!-- user2 카드 -->
+                <p><strong>{{ game.startingPlayer.first_name  }}:</strong> {{ game.startingPlayerNum }}</p>  <!-- user1 카드 -->
+                <p><strong>{{ game.defendingPlayer.first_name  }}:</strong> {{ game.defendingPlayerNum }}</p>  <!-- user2 카드 -->
                 <p><strong>게임 결과:</strong> {{ game_result }}</p>
                 <p><strong>점수:</strong> {{ score }}</p> 
             </div>
