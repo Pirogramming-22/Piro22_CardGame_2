@@ -48,7 +48,7 @@
                         <a href="{{ game.link }}" class="game-link">{{ game.action }}</a>
                     </div>
                     <div class="game-detail">
-                        <a href="#">게임정보</a> <!-- 수정 필요 !!-->
+                        <a href="{% url 'games:game_detail' game.game_id %}">게임정보</a> <!-- 수정 필요 !!-->
                     </div>
                 </div>
             {% empty %}

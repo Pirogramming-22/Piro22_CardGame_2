@@ -192,6 +192,8 @@ def game_detail(request, game_id):
             'score': score 
         }
 
+    else:#오류
+        context = None
     return render(request, 'games/game_detail.html', context)
 
 
@@ -243,3 +245,4 @@ def counter_attack(request, game_id):
         }
         return render(request, 'games/game_detail.html', context)
     return redirect('games:history_list')
+

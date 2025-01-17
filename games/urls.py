@@ -14,4 +14,6 @@ urlpatterns = [
     path('game_detail/<int:game_id>/', views.game_detail, name='game_detail'), #게임상세페이지
     path('cancel/<int:game_id>/', views.cancel_game, name='cancel_game'), #게임취소처리
     path('counterAttack/<int:game_id>/', views.counter_attack, name='counter_attack'), #반격
+
+
 ]

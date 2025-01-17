@@ -15,7 +15,7 @@
 
 /* 게임 헤더 */
 .game-header {
-    background-color: #5C2A9D;
+    background-color: #65366c;
     color: white;
     padding: 10px;
     border-radius: 8px;
@@ -42,7 +42,7 @@
 /* 버튼 스타일 */
 .action-button,
 .history-button {
-    background-color: #F6B93B;
+    background-color: rgb(240, 102, 87);
     color: white;
     padding: 12px 20px;
     border-radius: 5px;
@@ -56,7 +56,7 @@
 
 .action-button:hover,
 .history-button:hover {
-    background-color: #F39C12;
+    background-color: salmon;
 }
 
 /* 게임 종료 후 게임 결과 및 점수 */
@@ -73,7 +73,7 @@
 
 /* 전적 목록 버튼 */
 .history-button {
-    background-color: #5C2A9D;
+    background-color: #65366c;
     padding: 12px 20px;
     border-radius: 5px;
     text-decoration: none;
@@ -88,8 +88,8 @@
 
     <div class="game-detail-container">
         <div class="game-header">
-            <h3>{{ game.startingPlayer.username }} VS {{ game.defendingPlayer.username }}</h3>
-        </div>
+            <h3>{{ game.startingPlayer.first_name  }} VS {{ game.defendingPlayer.first_name  }}</h3>
+        </div> <br>
 
         {% if game.status == 'ongoing' and game.startingPlayer == user %}
             <!-- 다른 유저에게 싸움을 건 상태 -->
