@@ -252,3 +252,14 @@ def counter_attack(request, game_id):
     # GET 요청시 카드 선택 화면 표시
     numbers = random.sample(range(1, 11), 5)
     return render(request, 'games/counter_attack.html', {'numbers': numbers, 'game': game})
+
+def rankings(request):
+    # 상위 3명의 유저 가져오기 (점수 순 정렬)
+    top_users = User.objects.order_by('-score')[:3]
+
+    # 유저가 3명보다 적을 경우 예외 처리
+    while len(top_users) < 3:
+        top_users = list(top_users)
+        top_users.append(None)
+
+    return render(request, 'games/rankings.html', {'top_users': top_users})

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="ranking-container">
+    <h1>📊 Piro 명예의 전당</h1>
+    <div class="ranking-box">
+        {% for user in top_users %}
+            {% if user %}
+                <div class="ranking-item">
+                    <span class="rank-number">{{ forloop.counter }}위</span>: 
+                    {{ user.first_name }} ({{ user.score }} 점)
+                </div>
+            {% else %}
+                <div class="ranking-item">
+                    <span class="rank-number">{{ forloop.counter }}위</span>: 
+                    ⚪ 아직 유저 없음
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
