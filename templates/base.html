@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirogrammer Card Game</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'reset.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'rankings.css' %}">
+    {% block head%}
+    {% endblock %}
+</head>
+<body>
+    <header>
+        <a href="/" class="header-logo">Pirogrammer Card Game</a>
+        <nav>
+            {% if user.is_authenticated %}
+                <a href="{% url 'games:attack'%}">게임하기</a>
+                <a href="{% url 'games:history_list'%}">리스트 보기</a>
+                <a href="{% url 'games:rankings' %}">랭킹보기</a>
+                <a href="{% url 'accounts:logout' %}">로그아웃</a>
+            {% else %}
+                <a href="{% url 'accounts:social_login' %}">로그인</a>
+                <a href="{% url 'accounts:social_login' %}">회원가입</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>피로그래밍 카드 게임 세션 2조</p>
+    </footer>
+
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

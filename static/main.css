@@ -1,0 +1,45 @@
+:root {
+    --purple: #65366c;
+    --orange: #f79278;
+}
+
+header {
+    background-color: var(--purple);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+}
+
+.header-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--orange);
+}
+
+nav a {
+    color: var(--orange);
+    text-decoration: none;
+    margin-left: 2rem;
+}
+
+main {
+    min-height: calc(100vh - 120px);
+    padding: 2rem;
+}
+
+footer {
+    background-color: var(--purple);
+    color: var(--orange);
+    text-align: center;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+main {
+    background: linear-gradient(135deg, #f8e1d4, #f4cbc0);
+}
