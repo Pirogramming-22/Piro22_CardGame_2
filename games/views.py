@@ -211,37 +211,44 @@ def cancel_game(request, game_id):
 @login_required
 def counter_attack(request, game_id):
     game = get_object_or_404(Game, id=game_id)
+    
+    if game.status != 'ongoing' or game.defendingPlayer != request.user:
+        return redirect('games:history_list')
 
-    if game.status == 'ongoing' and game.defendingPlayer == request.user:
-        # 카드 숫자 비교
-        if game.defendingPlayerNum > game.startingPlayerNum:
-            # 방어자가 승리
-            game.winner = 'defending'
-            game_result = '✨승리!✨'
-            score = f'🎯 {game.defendingPlayerNum} 점 획득'
-            # 점수 업데이트: 방어자는 점수 획득, 공격자는 점수 차감
-            game.defendingPlayer.score += game.defendingPlayerNum
-            game.startingPlayer.score -= game.startingPlayerNum
-        else:
-            # 공격자가 승리
-            game.winner = 'starting'
-            game_result = '🥲패배🥲'
-            score = f'💔 {game.startingPlayerNum} 점 차감'
-            # 점수 업데이트: 공격자는 점수 획득, 방어자는 점수 차감
-            game.startingPlayer.score += game.startingPlayerNum
-            game.defendingPlayer.score -= game.defendingPlayerNum
+    if request.method == 'POST':
+        selected_card = request.POST.get('counter_card')
+        if selected_card:
+            game.defendingPlayerNum = int(selected_card)
+            
+            # 카드 숫자 비교 및 승패 결정
+            if game.defendingPlayerNum < game.startingPlayerNum:
+                game.winner = 'starting'
+                game_result = '🥲패배🥲'
+                score = f'💔 {game.startingPlayerNum} 점 차감'
+                # 점수 업데이트
+                game.startingPlayer.score += game.startingPlayerNum
+                game.defendingPlayer.score -= game.defendingPlayerNum
+            else:
+                game.winner = 'defending'
+                game_result = '✨승리!✨'
+                score = f'🎯 {game.defendingPlayerNum} 점 획득'
+                # 점수 업데이트
+                game.defendingPlayer.score += game.defendingPlayerNum
+                game.startingPlayer.score -= game.startingPlayerNum
 
-        # 게임 상태를 종료로 설정
-        game.status = 'end'
-        game.save()
-        game.startingPlayer.save()
-        game.defendingPlayer.save()
+            game.status = 'end'
+            game.save()
+            game.startingPlayer.save()
+            game.defendingPlayer.save()
 
-        context = {
-            'game': game,
-            'user': request.user,
-            'game_result': game_result,
-            'score': score
-        }
-        return render(request, 'games/game_detail.html', context)
-    return redirect('games:history_list')
+            context = {
+                'game': game,
+                'user': request.user,
+                'game_result': game_result,
+                'score': score
+            }
+            return render(request, 'games/game_detail.html', context)
+
+    # GET 요청시 카드 선택 화면 표시
+    numbers = random.sample(range(1, 11), 5)
+    return render(request, 'games/counter_attack.html', {'numbers': numbers, 'game': game})
