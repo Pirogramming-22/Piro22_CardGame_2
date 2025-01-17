@@ -221,20 +221,25 @@ def counter_attack(request, game_id):
             game.defendingPlayerNum = int(selected_card)
             
             # 카드 숫자 비교 및 승패 결정
-            if game.defendingPlayerNum < game.startingPlayerNum:
+            if game.defendingPlayerNum > game.startingPlayerNum:
                 game.winner = 'starting'
                 game_result = '🥲패배🥲'
-                score = f'💔 {game.startingPlayerNum} 점 차감'
+                score = f'💔 {game.defendingPlayerNum} 점 차감'
                 # 점수 업데이트
                 game.startingPlayer.score += game.startingPlayerNum
                 game.defendingPlayer.score -= game.defendingPlayerNum
-            else:
+
+            elif game.defendingPlayerNum < game.startingPlayerNum:
                 game.winner = 'defending'
                 game_result = '✨승리!✨'
                 score = f'🎯 {game.defendingPlayerNum} 점 획득'
                 # 점수 업데이트
                 game.defendingPlayer.score += game.defendingPlayerNum
                 game.startingPlayer.score -= game.startingPlayerNum
+            else:
+                game.winner = 'defending'
+                game_result = '무승부'
+                score = f'😐 점수 변동 없음'
 
             game.status = 'end'
             game.save()
