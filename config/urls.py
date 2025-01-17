@@ -22,4 +22,5 @@ urlpatterns = [
     path('', lambda request: redirect('accounts:main'), name='home'),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),  # 소셜 로그인 부분 url (현재 임시)
+    path('games/', include('games.urls')),
 ]

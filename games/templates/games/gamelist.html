@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block head %}
+<style>
+.container{
+    margin: 50px;
+    color: #65366c;
+}
+
+.game-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin: 30px 40px;
+}
+
+.item-container a{
+    text-decoration: none;
+    background-color: #65366c;
+    color: salmon;
+    border: 1px solid salmon;
+    border-radius: 10px;
+    padding: 15px;
+}
+.header-title{
+    font-size: 2rem;
+    margin: 20px 20px 40px 0;
+    color: #65366c;
+    font-weight: bold;
+}
+
+.game-actions .cancel-btn {
+    background-color: lightpink;
+    width: 30px;
+    height: 10px;
+    color: black;
+    text-align: center; 
+    border-radius: 15px;
+    padding: 5px;
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="header-title">History List</div>
+    <div class="main-container">
+        <div class="main-title">현재 플레이어 : {{ user.first_name }}</div>
+        <br>
+        <hr>
+        <div class="item-container">
+            {% for game in game_info %}
+                <div class="game-item">
+                    <div class="game-info">
+                        <span>No.{{ forloop.counter }}</span>
+                        <span>{{ user.first_name }} VS. {{ game.opponent }}</span>
+                    </div>
+                    <div class="game-actions">
+                        {% if game.action == '반격하기' %}
+                            
+                        {% else %}
+                            <span>{{ game.status }}</span>
+                        {% endif %}
+                        {% if game.status != '결과 : (무승부)' and game.status != '결과 : (승리)' and game.status != '결과 : (패배)' %}
+                            {% if game.action == '게임취소' %}
+                                <a href="{% url 'games:cancel_game' game.game_id %}" class="game-link cancel-btn">{{ game.action }}</a>
+                            {% elif game.action == '반격하기' %}
+                                <a href="{% url 'games:counter_attack' game.game_id %}" class="game-link counter-btn">COUNTERATTACK</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    
+                    
+                    <div class="game-detail">
+                        <a href="#">게임정보</a> <!-- 수정 필요 !!-->
+                    </div>
+                </div>
+            {% empty %}
+                <p>아직 진행된 게임이 없습니다.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
