@@ -23,6 +23,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     social_id = models.CharField(max_length=100, null=True, blank=True)
     profile_image = models.ImageField(upload_to='profile_images', null=True, blank=True)
+    password = models.CharField(max_length=128)
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
