@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+/*전체 컨테이너*/
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color:#65366c;
+    width: 50%;
+    border-radius: 10px;
+    margin: 0 auto;
+    padding: 70px;
+}
+
+/*선택 타이틀*/
+#startgame-title{
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+/*카드처럼 디자인*/
+input[type="radio"]{
+    display: none;
+}
+
+label.card{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 50px;
+    height: 75px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+    transition: transform 0.2s ease;
+    margin: 40px 10px 30px 10px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover {
+    background-color: #ddd;
+    transform: scale(1.1);
+}
+
+.card-radio:checked + .card {
+    background-color: #4CAF50; 
+    color: white;
+    transition: all 0.2s ease;
+}
+#choose_Defender{
+    color: white;
+    font-size: 1.2rem;
+}
+
+#defending_player{
+    background-color: transparent;
+    color: white;
+    width: 100px;
+    height: 20px;
+    border: none;
+    text-align: center;
+    margin: 10px;
+}
+
+#defending_player option {
+    color: #65366c;
+}
+
+.error-message{
+    color: white;
+    margin: 10px;
+}
+
+#attackBtn{
+    padding: 20px;
+    border-radius: 10px;
+    background-color: salmon;
+    color: #65366c;
+    font-weight: bold;
+    margin-top: 30px;
+    cursor:pointer;
+}
+#attackBtn:hover{
+    background-color: rgb(219, 97, 83);
+    transition: all 0.3s ease;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form id="attackForm" action="{% url 'games:attack'%}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div id="startgame-title">카드를 선택하세요! ♣️</div>
+
+        <div id="choices-container">
+            {% for num in numbers %}
+                <input type="radio" name="card" id="card{{ num }}" value="{{ num }}" class="card-radio">
+                <label for="card{{ num }}" class="card">{{ num }}</label>
+            {% endfor %}
+        </div>
+
+        <div id="choose_Defender">
+            <label for="defending_player">Defender :</label>
+            <select name="defending_player" id="defending_player">
+                <option value="" disabled selected>====</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.first_name }}</option>
+                {% endfor %}
+            </select>    
+        </div>
+
+        {% if error %}
+            <div id="error-message">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <div id="button-container">
+            <button type="submit" id="attackBtn">ATTACK</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const attackForm = document.getElementById('attackForm');
+    const radioButtons = document.querySelectorAll('.card-radio');
+    const defenderSelect = document.getElementById('defending_player');
+    
+    attackForm.addEventListener('submit', function (e) {
+        // 선택 여부 체크
+        const selectedCard = document.querySelector('input[name="card"]:checked');
+        const defenderPlayer = defenderSelect.value;
+
+        let valid = true;
+
+        // 기존 경고 메시지 제거
+        document.querySelectorAll('.error-message').forEach(msg => msg.remove());
+
+        // 카드 선택 여부 확인
+        if (!selectedCard) {
+            valid = false;
+            const cardError = document.createElement('div');
+            cardError.className = 'error-message';
+            cardError.textContent = '⚠️ 카드를 선택해주세요!';
+            document.querySelector('#choices-container').insertAdjacentElement('afterend', cardError);
+        }
+
+        // 상대방 선택 여부 확인
+        if (!defenderPlayer) {
+            valid = false;
+            const defenderError = document.createElement('div');
+            defenderError.className = 'error-message';
+            defenderError.textContent = '⚠️ 상대방을 선택해주세요!';
+            document.querySelector('#choose_Defender').insertAdjacentElement('afterend', defenderError);
+        }
+
+        // 유효하지 않으면 제출 막기
+        if (!valid) {
+            e.preventDefault();
+        }
+    });
+</script>
+{% endblock %}

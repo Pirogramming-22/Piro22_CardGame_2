@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+/* 게임 디테일 컨테이너 */
+.game-detail-container {
+    background-color: #F8E1D4;
+    border-radius: 10px;
+    padding: 30px;
+    width: 500px;
+    margin: 50px auto;
+    font-family: 'Arial', sans-serif;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* 게임 헤더 */
+.game-header {
+    background-color: #65366c;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 20px;
+}
+
+/* 게임 상태 설명 (진행 중...) */
+.game-subtitle {
+    font-size: 16px;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* 게임 정보 섹션 */
+.game-info {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.game-info p {
+    margin: 8px 0;
+}
+
+/* 버튼 스타일 */
+.action-button,
+.history-button {
+    background-color: rgb(240, 102, 87);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-decoration: none;
+    margin: 10px 0;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+}
+
+.action-button:hover,
+.history-button:hover {
+    background-color: salmon;
+}
+
+/* 게임 종료 후 게임 결과 및 점수 */
+.game-result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.game-result span {
+    font-size: 20px;
+}
+
+
+/* 전적 목록 버튼 */
+.history-button {
+    background-color: #65366c;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.history-button:hover {
+    background-color: #9B5CC0;
+}
+</style>
+
+    <div class="game-detail-container">
+        <div class="game-header">
+            <h3>{{ game.startingPlayer.first_name  }} VS {{ game.defendingPlayer.first_name  }}</h3>
+        </div> <br>
+
+        {% if game.status == 'ongoing' and game.startingPlayer == user %}
+            <!-- 다른 유저에게 싸움을 건 상태 -->
+            <p class="game-subtitle">진행 중...</p>
+            <div class="game-info">
+                <p><strong>나:</strong> {{ game.startingPlayerNum }}</p>
+            </div>
+            <div class="game-actions">
+                <form method="POST" action="{% url 'games:cancel_game' game.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="action-button">게임 취소</button>
+                </form>
+                <a href="{% url 'games:history_list' %}" class="history-button">전적 목록</a>
+            </div>
+        
+        {% elif game.status == 'ongoing' and game.defendingPlayer == user %}
+            <!-- 다른 유저가 싸움을 걸어온 상태 -->
+            <div class="game-actions">
+                <form method="POST" action="{% url 'games:counter_attack' game.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="action-button">대응하기</button>
+                </form>
+                <a href="{% url 'games:history_list' %}" class="history-button">전적 목록</a>
+            </div>
+        
+        {% elif game.status == 'end' %}
+            <!-- 이미 종료된 게임 -->
+            <div class="game-info">
+                <p>숫자가 작은 사람이 이깁니다.</p>
+                <p><strong>{{ game.startingPlayer.first_name  }}:</strong> {{ game.startingPlayerNum }}</p>  <!-- user1 카드 -->
+                <p><strong>{{ game.defendingPlayer.first_name  }}:</strong> {{ game.defendingPlayerNum }}</p>  <!-- user2 카드 -->
+                <p><strong>게임 결과:</strong> {{ game_result }}</p>
+                <p><strong>점수:</strong> {{ score }}</p> 
+            </div>
+            <a href="{% url 'games:history_list' %}" class="history-button">전적 목록</a>
+        {% endif %}
+    </div>
+{% endblock %}
