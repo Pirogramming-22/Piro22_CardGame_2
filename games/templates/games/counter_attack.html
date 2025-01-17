@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #65366c;
+    width: 50%;
+    border-radius: 10px;
+    margin: 0 auto;
+    padding: 70px;
+}
+
+#counter-title {
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.card-container {
+    margin: 20px 0;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+label.card {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 50px;
+    height: 75px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 3px;
+    transition: transform 0.2s ease;
+    margin: 40px 10px 30px 10px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover {
+    background-color: #ddd;
+    transform: scale(1.1);
+}
+
+.card-radio:checked + .card {
+    background-color: #4CAF50;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+#counterBtn {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: salmon;
+    color: #65366c;
+    font-weight: bold;
+    margin-top: 30px;
+    cursor: pointer;
+    border: none;
+}
+
+#counterBtn:hover {
+    background-color: rgb(219, 97, 83);
+    transition: all 0.3s ease;
+}
+
+.error-message {
+    color: white;
+    margin: 10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div id="counter-title">반격할 카드를 선택하세요! ♣️</div>
+    
+    <form id="counterForm" method="post">
+        {% csrf_token %}
+        <div class="card-container">
+            {% for num in numbers %}
+                <input type="radio" name="counter_card" id="card{{ num }}" value="{{ num }}" class="card-radio">
+                <label for="card{{ num }}" class="card">{{ num }}</label>
+            {% endfor %}
+        </div>
+        
+        <button type="submit" id="counterBtn">COUNTER ATTACK</button>
+    </form>
+</div>
+
+<script>
+    const counterForm = document.getElementById('counterForm');
+    
+    counterForm.addEventListener('submit', function(e) {
+        const selectedCard = document.querySelector('input[name="counter_card"]:checked');
+        
+        if (!selectedCard) {
+            e.preventDefault();
+            const cardError = document.createElement('div');
+            cardError.className = 'error-message';
+            cardError.textContent = '⚠️ 카드를 선택해주세요!';
+            document.querySelector('.card-container').insertAdjacentElement('afterend', cardError);
+        }
+    });
+</script>
+{% endblock %}

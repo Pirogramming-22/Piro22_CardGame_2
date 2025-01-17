@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      background-color:  #f4cbc0;
+    }
+  </style>
+</head>
+<body>
+  <div style="height: 100vh; display: flex; justify-content: center; align-items: center;">
+    <div style=" display: flex; gap: 20px;">
+      <a href="{% url 'accounts:kakao-login' %}">
+        <img src="{% static 'img/kakao_login.png' %}" alt="카카오 로그인 버튼" width="300px" height="100px">
+      </a>
+      <a href="{% url 'accounts:naver-login' %}">
+        <img src="{% static 'img/naver_login.png' %}" alt="카카오 로그인 버튼" width="300px" height="100px">
+      </a>
+    </div> 
+  </div>
+   
+</body>
+</html>

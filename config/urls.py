@@ -16,8 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
 
 urlpatterns = [
+    path('', lambda request: redirect('accounts:main'), name='home'),
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),  # 로그인/회원가입을 메인 페이지로 (현재 임시)
+    path('accounts/', include('accounts.urls')),  # 소셜 로그인 부분 url (현재 임시)
+    path('games/', include('games.urls')),
 ]
